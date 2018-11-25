@@ -48,6 +48,10 @@ static int transfer_all_data(int fdfrom, int fdto) {
 			// read interrupted by signal, restart
 			continue;
 		}
+		if (n < 0 && errno == EIO) {
+			// linux returns EIO on pty EOF
+			break;
+		}
 		if (n < 0) {
 			die("Unexpected error from read: %s\n", strerror(errno));
 		}
