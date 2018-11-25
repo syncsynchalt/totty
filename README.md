@@ -9,7 +9,7 @@ interactivity of a piped command that you're watching at the terminal.
 
 Add the word `totty` (as in, "to a terminal") before any command
 in your pipe and that command will believe it is writing to a
-terminal, disabling this automatic buffering feature.
+terminal, disabling the automatic buffering feature.
 
 ### An example
 
@@ -45,8 +45,8 @@ flags for this purpose: `script --return -c "command to execute" /dev/null`.
 This has several downsides:
 
 - it can be hard to remember the exact invocation
-- it requires you to escape the command to invoke
-- it is not portable (none of these flags are supported on macOS)
+- it requires you to quote/escape the command to invoke
+- it is not portable (none of the flags are supported on macOS)
 - it's long and ugly
 
 By comparison, `totty` works anywhere that supports POSIX
