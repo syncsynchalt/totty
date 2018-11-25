@@ -2,15 +2,14 @@
 
 `totty` unclogs pipes and gets them flowing again.
 
-When using the standard I/O functions provided by libc the program
-will automatically detect when the output is not written a
-terminal (also called a "tty") and will buffer that output.
-While this is good for performance it can break the interactivity
-of a piped command that you're running at the terminal.
+The standard I/O functions in libc will detect when a program is
+not writing to a terminal (also called a tty) and will automatically
+buffer output.  While this is good for performance it can break the
+interactivity of a piped command that you're watching at the terminal.
 
 Add the word `totty` (as in, "to a terminal") before any command
 in your pipe and that command will believe it is writing to a
-terminal.
+terminal, disabling this automatic buffering feature.
 
 ### An example
 
@@ -24,32 +23,31 @@ but if a second grep is added, the output stops until the buffer fills:
 
 ```
 tail -f /var/log/apache2/access.log | grep 404 | grep favicon.ico
-(output stops here until 4kb of "404" data is written)
 ```
 
-To fix this, use `totty`!
+To fix this, use `totty` and the pipe flows again!
 
 ```
 tail -f /var/log/apache2/access.log | totty grep 404 | grep favicon.ico
-(the data flows again)
 ```
 
 No need to figure out which component is the source of the
-clog, if you're unsure then it's safe to add it everywhere:
+clog!  It's safe to add it everywhere:
 
 ```
 totty tail -f /var/log/apache2/access.log | totty grep 404 | totty grep favicon.ico
-(works fine)
 ```
 
 ### Alternatives
 
 You may see suggestions to use the `script` command with particular
-flags for this purpose, but it has several downsides:
+flags for this purpose: `script --return -c "command to execute" /dev/null`.
+This has several downsides:
 
-- it can be hard to remember: `script --return -c "command to execute" /dev/null`
-- it requires you to escape the command to invoke, and to add text before and after the existing command
+- it can be hard to remember the exact invocation
+- it requires you to escape the command to invoke
 - it is not portable (none of these flags are supported on macOS)
+- it's long and ugly
 
 By comparison, `totty` works anywhere that supports POSIX
 pseudo-terminals, is easy to remember, is easy to introduce to a
